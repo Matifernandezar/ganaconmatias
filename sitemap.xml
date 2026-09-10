@@ -9,25 +9,43 @@
   <url>
     <loc>https://ganaconmatias.vercel.app/casino-online-whatsapp</loc>
     <lastmod>2026-09-10</lastmod>
-    <changefreq>weekly</changefreq>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://ganaconmatias.vercel.app/grupos-de-casinos-whatsapp</loc>
+    <lastmod>2026-09-10</lastmod>
+    <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://ganaconmatias.vercel.app/casino-online-24-horas</loc>
     <lastmod>2026-09-10</lastmod>
-    <changefreq>weekly</changefreq>
+    <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://ganaconmatias.vercel.app/recarga-casino-whatsapp</loc>
     <lastmod>2026-09-10</lastmod>
-    <changefreq>weekly</changefreq>
+    <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://ganaconmatias.vercel.app/juego-responsable</loc>
     <lastmod>2026-09-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://ganaconmatias.vercel.app/privacidad</loc>
+    <lastmod>2026-09-10</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://ganaconmatias.vercel.app/terminos</loc>
+    <lastmod>2026-09-10</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
   </url>
 </urlset>

@@ -1,54 +1,99 @@
 (() => {
-  const menuButton = document.querySelector('.menu-toggle');
-  const nav = document.querySelector('.main-nav');
+  "use strict";
 
-  if (menuButton && nav) {
-    menuButton.addEventListener('click', () => {
-      const isOpen = nav.classList.toggle('is-open');
-      menuButton.setAttribute('aria-expanded', String(isOpen));
+  const body = document.body;
+  const menuButton = document.querySelector("[data-menu-toggle]");
+  const menu = document.querySelector("[data-menu]");
+
+  const closeMenu = () => {
+    if (!menuButton || !menu) return;
+    menuButton.setAttribute("aria-expanded", "false");
+    menu.classList.remove("is-open");
+    body.classList.remove("menu-open");
+  };
+
+  if (menuButton && menu) {
+    menuButton.addEventListener("click", () => {
+      const isOpen = menuButton.getAttribute("aria-expanded") === "true";
+      menuButton.setAttribute("aria-expanded", String(!isOpen));
+      menu.classList.toggle("is-open", !isOpen);
+      body.classList.toggle("menu-open", !isOpen);
     });
 
-    nav.querySelectorAll('a').forEach((link) => {
-      link.addEventListener('click', () => {
-        nav.classList.remove('is-open');
-        menuButton.setAttribute('aria-expanded', 'false');
-      });
-    });
-  }
-
-  const year = document.getElementById('year');
-  if (year) year.textContent = String(new Date().getFullYear());
-
-  const ageGate = document.getElementById('age-gate');
-  const ageYes = document.getElementById('age-yes');
-  const ageKey = 'ganaconmatias_age_confirmed';
-
-  if (ageGate && !sessionStorage.getItem(ageKey)) {
-    ageGate.hidden = false;
-    document.body.classList.add('gate-open');
-  }
-
-  if (ageGate && ageYes) {
-    ageYes.addEventListener('click', () => {
-      sessionStorage.setItem(ageKey, '1');
-      ageGate.hidden = true;
-      document.body.classList.remove('gate-open');
+    menu.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", closeMenu);
     });
   }
 
-  window.dataLayer = window.dataLayer || [];
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") closeMenu();
+  });
 
-  document.querySelectorAll('.js-whatsapp').forEach((link) => {
-    const message = link.dataset.message;
-    if (message) {
-      link.href = `https://wa.me/5492975815752?text=${encodeURIComponent(message)}`;
+  document.querySelectorAll("[data-year]").forEach((node) => {
+    node.textContent = String(new Date().getFullYear());
+  });
+
+  const ageGate = document.querySelector("[data-age-gate]");
+  const ageConfirm = document.querySelector("[data-age-confirm]");
+  const ageExit = document.querySelector("[data-age-exit]");
+
+  if (ageGate) {
+    let hasConfirmedAge = false;
+    try {
+      hasConfirmedAge = sessionStorage.getItem("gm_age_confirmed") === "true";
+    } catch (_) {
+      hasConfirmedAge = false;
     }
 
-    link.addEventListener('click', () => {
+    if (!hasConfirmedAge) {
+      ageGate.hidden = false;
+      body.classList.add("modal-open");
+      ageConfirm?.focus();
+    }
+
+    ageConfirm?.addEventListener("click", () => {
+      try {
+        sessionStorage.setItem("gm_age_confirmed", "true");
+      } catch (_) {
+        // The gate still closes if storage is unavailable.
+      }
+      ageGate.hidden = true;
+      body.classList.remove("modal-open");
+    });
+
+    ageExit?.addEventListener("click", () => {
+      window.location.replace("https://www.google.com/");
+    });
+  }
+
+  const campaign = (() => {
+    const params = new URLSearchParams(window.location.search);
+    const data = {
+      source: params.get("utm_source") || "direct",
+      medium: params.get("utm_medium") || "none",
+      campaign: params.get("utm_campaign") || "none",
+    };
+
+    try {
+      const hasUtm = params.has("utm_source") || params.has("utm_medium") || params.has("utm_campaign");
+      if (hasUtm) sessionStorage.setItem("gm_attribution", JSON.stringify(data));
+      const saved = sessionStorage.getItem("gm_attribution");
+      return saved ? JSON.parse(saved) : data;
+    } catch (_) {
+      return data;
+    }
+  })();
+
+  document.querySelectorAll("[data-wa-cta]").forEach((link) => {
+    link.addEventListener("click", () => {
+      window.dataLayer = window.dataLayer || [];
       window.dataLayer.push({
-        event: 'click_whatsapp',
+        event: "whatsapp_click",
+        cta_location: link.dataset.waCta,
         page_path: window.location.pathname,
-        link_text: link.textContent.trim()
+        campaign_source: campaign.source,
+        campaign_medium: campaign.medium,
+        campaign_name: campaign.campaign,
       });
     });
   });
